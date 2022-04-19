@@ -1,4 +1,3 @@
-# Project2
 # Patients Monitor Platform
 http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 
