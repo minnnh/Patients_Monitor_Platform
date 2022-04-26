@@ -73,13 +73,28 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 - `flask_device` is the code of implementing the function of getting and posting the data of tables. Users are able to get the data through go to the website http://flask-env.eba-unimkryi.us-east-2.elasticbeanstalk.com/ .
   - Five tables mentioned above are all included in the code.
   ``` Python
+   ... 
+   def get_data(table, col):
+	con = sqlite3.connect(db)
+	con.row_factory = sqlite3.Row
+	cur = con.cursor()
+	num = 1
+	data = {}
+
+	for row in cur.execute(f'SELECT * FROM {table}'):
+		dic = {}
+		for i in range(len(row)):
+			dic[col[i]] = row[i]				
+		data[f'number {num} user'] = dic
+		num += 1
+
+	con.commit()
+	con.close
+	return data
+   ...
   @application.route("/create", methods=["POST", "GET"])
   def Storage():
 	if request.method == "POST":
-		# user_id = int(request.form['User_id'])
-		# device_id = int(request.form['Device_id'])
-		# role = request.form['Roles']
-		#time = str(datetime.datetime.now())
 		new_data = {"Storage":{'User_id': int(request.form['User_id']),
 					'Device_id': int(request.form['Device_id']),
 					'Roles': request.form['Roles']}}
@@ -89,7 +104,6 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 			json.dump(new_json, outfile)
 
 		p = Device('new_json.json')
-		#p.importdb("table.db")
 		p.importdb(db)
 		p.user_id = int(request.form['User_id'])
 		p.device_id = int(request.form['Device_id'])
@@ -149,25 +163,6 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 - `flask_chat` is the code of implementing the function of getting and posting the data of the tables. Users are able to get the data through go to the website http://flask-env.eba-unimkryi.us-east-2.elasticbeanstalk.com/ .
   - In the flask chat part, two tables are included into the same page.
   ``` Python
-  ...
-  def get_data(table, col):
-	con = sqlite3.connect(db)
-	con.row_factory = sqlite3.Row
-	cur = con.cursor()
-	num = 1
-	data = {}
-
-	for row in cur.execute(f'SELECT * FROM {table}'):
-		dic = {}
-		for i in range(len(row)):
-			dic[col[i]] = row[i]				
-		data[f'number {num} user'] = dic
-		num += 1
-
-	con.commit()
-	con.close
-	return data
-	
   @application.route("/chat", methods=["POST", "GET"])
   def chat():
     if request.method == "POST":
