@@ -75,7 +75,19 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
     
   @application.route("/devices", methods=["POST", "GET"])
   def Devices():
-    ...
+	if request.method == "POST":
+		new_data = {"Devices":{'Device_id': int(request.form['Device_id']),
+					'MAC': request.form['MAC'],
+					'Date_of_Purchase': request.form['Date_of_Purchase'],
+					'User_id': int(request.form['User_id']),
+					'Fir_ver': request.form['Fir_ver']}}
+
+		insert_data("Devices", new_data)
+
+		return new_data
+	else:
+			data = get_data("Devices", col_devices)
+			return render_template("devices.html", data = data)
     
   @application.route("/measurements", methods=["POST", "GET"])
   def Measurements():
