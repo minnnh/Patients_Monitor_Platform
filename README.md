@@ -8,6 +8,14 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 ![entrances](https://github.com/minnnh/Patients_Monitor/blob/main/pics/entrances.png)
 
 ## Design of Device Module
+- `table.py` is the program to create the tables and insert the initial data.
+	```Python
+	cur.execute('CREATE TABLE Users(User_id INTEGER PRIMARY KEY, Name TEXT, Date_of_Birth TEXT, Roles TEXT, Gender TEXT)')
+	cur.execute('CREATE TABLE Devices(Device_id INTEGER PRIMARY KEY, MAC TEXT, Date_of_Purchase TEXT, User_id INTEGER, Fir_ver TEXT)')
+	cur.execute('CREATE TABLE Measurements(User_id INTEGER PRIMARY KEY, Weight REAL, Height REAL, Temperature REAL, Systolic_Pressure REAL, Diastolic_Pressure REAL, Pulse REAL, Oximeter REAL, Glucometer REAL)')
+	cur.execute('CREATE TABLE Assignments(Device_id INTEGER PRIMARY KEY, User_id INTEGER, Assigner_id INTEGER, Date_Assigned TEXT)')
+	cur.execute('CREATE TABLE Storage(Premission INTEGER PRIMARY KEY AUTOINCREMENT, User_id INTEGER, Device_id INTEGER, Roles TEXT)')
+	```
 - `Device_Module.py` is the code of building the table of Device messages. There is defalut data in the table, which is created in `table.py`. In device part, five tables have been created: `Users`, `Devices`, `Measurements`, `Assignments`, and `Storage`.   
   - It has the function of checking if the data works.
   ``` Python   
