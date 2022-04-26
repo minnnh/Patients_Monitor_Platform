@@ -149,6 +149,25 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 - `flask_chat` is the code of implementing the function of getting and posting the data of the tables. Users are able to get the data through go to the website http://flask-env.eba-unimkryi.us-east-2.elasticbeanstalk.com/ .
   - In the flask chat part, two tables are included into the same page.
   ``` Python
+  ...
+  def get_data(table, col):
+	con = sqlite3.connect(db)
+	con.row_factory = sqlite3.Row
+	cur = con.cursor()
+	num = 1
+	data = {}
+
+	for row in cur.execute(f'SELECT * FROM {table}'):
+		dic = {}
+		for i in range(len(row)):
+			dic[col[i]] = row[i]				
+		data[f'number {num} user'] = dic
+		num += 1
+
+	con.commit()
+	con.close
+	return data
+	
   @application.route("/chat", methods=["POST", "GET"])
   def chat():
     if request.method == "POST":
