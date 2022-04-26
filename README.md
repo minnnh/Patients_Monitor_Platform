@@ -16,7 +16,7 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
 	cur.execute('CREATE TABLE Assignments(Device_id INTEGER PRIMARY KEY, User_id INTEGER, Assigner_id INTEGER, Date_Assigned TEXT)')
 	cur.execute('CREATE TABLE Storage(Premission INTEGER PRIMARY KEY AUTOINCREMENT, User_id INTEGER, Device_id INTEGER, Roles TEXT)')
 	```
-- `Device_Module.py` is the code of building the table of Device messages. There is defalut data in the table, which is created in `table.py`. In device part, five tables have been created: `Users`, `Devices`, `Measurements`, `Assignments`, and `Storage`.   
+- `Device_Module.py` is the code of inserting the table of Device messages. There is defalut data in the table, which is created in `table.py`. In device part, five tables have been created: `Users`, `Devices`, `Measurements`, `Assignments`, and `Storage`.   
   - It has the function of checking if the data works.
   ``` Python   
     def check_user_id(self):
@@ -75,7 +75,44 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
   ``` Python
   @application.route("/create", methods=["POST", "GET"])
   def Storage():
-    ...
+	if request.method == "POST":
+		# user_id = int(request.form['User_id'])
+		# device_id = int(request.form['Device_id'])
+		# role = request.form['Roles']
+		#time = str(datetime.datetime.now())
+		new_data = {"Storage":{'User_id': int(request.form['User_id']),
+					'Device_id': int(request.form['Device_id']),
+					'Roles': request.form['Roles']}}
+		new_json = json.dumps(new_data)
+
+		with open('new_json.json', 'w') as outfile:
+			json.dump(new_json, outfile)
+
+		p = Device('new_json.json')
+		#p.importdb("table.db")
+		p.importdb(db)
+		p.user_id = int(request.form['User_id'])
+		p.device_id = int(request.form['Device_id'])
+		p.role = request.form['Roles']
+		#p.get_device(0)
+
+		p.check_user_id()
+		p.check_device_id()
+		p.check_role()
+		if ((p.check_user_id() and p.check_device_id() and p.check_role())!=True):
+			return "There is something wrong in your infomation, please check it."
+		
+		conn = sqlite3.connect(db) # table.db
+		cur = conn.cursor()
+		cur.execute(f'INSERT INTO Storage VALUES ((SELECT MAX(Premission) + 1 FROM Storage),{p.user_id}, {p.device_id}, "{p.role}")')
+
+		conn.commit()
+		conn.close
+
+		return new_data
+	else:
+			data = get_data("Storage", col_storage)
+			return render_template("storage.html", data = data)
   
   @application.route("/users", methods=["POST", "GET"])
   def Users():
@@ -83,20 +120,8 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
     
   @application.route("/devices", methods=["POST", "GET"])
   def Devices():
-	if request.method == "POST":
-		new_data = {"Devices":{'Device_id': int(request.form['Device_id']),
-					'MAC': request.form['MAC'],
-					'Date_of_Purchase': request.form['Date_of_Purchase'],
-					'User_id': int(request.form['User_id']),
-					'Fir_ver': request.form['Fir_ver']}}
+    ...
 
-		insert_data("Devices", new_data)
-
-		return new_data
-	else:
-			data = get_data("Devices", col_devices)
-			return render_template("devices.html", data = data)
-    
   @application.route("/measurements", methods=["POST", "GET"])
   def Measurements():
     ...
