@@ -22,7 +22,7 @@ When the request arrives, we will first check the user's information, such as wh
 
 Flask-wtf and WTF are used to implement forms functions. Flask-wtf does some encapsulation of WTF. Flask-wtf and WTF are mainly used to establish the correspondence between HTML elements and Python classes, and control HTML elements by manipulating corresponding classes or objects in Python code. We need to use flask-wtf and WTF in Python code to define the front page form (essentially a form class) and pass the corresponding form object as an argument to render_template. J then renders the corresponding template into HTML text and returns it to the user as an HTTP response.
 
-```
+```Python
 # forms.py
 from flask_wtf import FlaskForm
 from wtforms import StringField, BooleanField, PasswordField
@@ -35,7 +35,7 @@ class LoginForm(FlaskForm):
 
 ```
 
-```
+```Python
 @application.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -60,7 +60,7 @@ For the registration part, we need to store passwords. However, if the username 
 
 The User class needs to inherit the UserMixin class from flask-Login for User session management. We store user information directly into a JSON file. Instead of storing passwords directly, we store encrypted hash values, using the generate_password_hash function in the Werkzeug. Security package. Since this function uses the SHA1 algorithm by default and adds a salt value of length 8, it is quite safe. It's good enough for general purposes. To verify the password, use the check_password_hash function in the Werkzeug. Security package to verify the password.
 
-```
+```Python
 # models.py
 
 from werkzeug.security import generate_password_hash
@@ -156,7 +156,7 @@ class User(UserMixin):
 
 ### Logout
 
-```
+```Python
 @application.route('/logout')
 def logout():
     logout_user()
