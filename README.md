@@ -230,7 +230,7 @@ http://flask-env.eba-n2ygvpns.us-west-2.elasticbeanstalk.com/
         conn.commit()
         conn.close
     ```
-  - Five tables mentioned above are all included in the code.
+  - `flask_device.py`is the code of implementing the function of getting and posting the data of the tables. Users are able to get the data through go to the website http://flask-env.eba-unimkryi.us-east-2.elasticbeanstalk.com/ .
   ``` Python
    ... 
    def get_data(table, col):
