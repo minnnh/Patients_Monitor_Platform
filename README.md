@@ -1,5 +1,7 @@
 # Patients Monitor Platform
 
+Hospital Monitor streamlines communication in a hospital setting with customizable roles for doctors, nurses, and patients. Users can easily create accounts, log in securely, and access/update their information on the platform. This fosters efficient information flow and a collaborative healthcare experience, enhancing overall hospital management.
+
 ## Design of Patients Monitor Platform
 - All the funtions' entrances of this platform are shown on the home page, and there the description of the platform is also on the home page.
 - Users are able to go to different tables to complete their data through clicking different hyperlinks.
